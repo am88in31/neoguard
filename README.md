@@ -83,4 +83,7 @@ NeoGuard takes a **fundamentally different approach**: it detects the **acoustic
 
 **Expected advantage:** 10–25 seconds earlier alarm compared to foot-worn pulse oximetry *(literature-based estimate, pending clinical validation)*. 
 
-### Timeline of a choking event📧 **Contact:** [am88in31@mail.ir]
+### Timeline of a choking event📧 
+**Contact:** [am88in31@mail.ir]
+### OWNER 'Seyed Muhammad Amin Rahmani'
+location: Iran ☫ 
