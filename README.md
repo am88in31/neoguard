@@ -1,6 +1,6 @@
 # neoguard
 TinyML-based wearable for early detection of neonatal choking during feeding. Fuses I2S audio + IMU on ESP32-S3 with on-device inference (&lt;50ms latency, &lt;100KB model). Aims to detect choking 10–25s earlier than pulse oximetry (literature-based). Research prototype — not a medical device. By an 18-year-old developer.
-# 🍼 NeoGuard           <  THIS TEXT WAS WRITTEN BY AI >
+# 🍼 NeoGuard           <  THIS TEXT WAS EDITED BY AI >
 ### TinyML-Based Wearable for Early Neonatal Choking Detection
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -83,4 +83,4 @@ NeoGuard takes a **fundamentally different approach**: it detects the **acoustic
 
 **Expected advantage:** 10–25 seconds earlier alarm compared to foot-worn pulse oximetry *(literature-based estimate, pending clinical validation)*. 
 
-### Timeline of a choking event
+### Timeline of a choking event📧 **Contact:** [am88in31@mail.ir]
