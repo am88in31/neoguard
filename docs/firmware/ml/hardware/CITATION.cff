@@ -1,1 +1,17 @@
-
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+authors:
+  - family-names: "Rahmani"
+    given-names: "Seyed Mohammad Amin"
+    email: "am88in31@mail.ir"
+title: "NeoGuard: TinyML-Based Wearable for Early Neonatal Choking Detection"
+version: 0.1.0
+date-released: "2025-10-16"
+url: "https://github.com/am88in31/neoguard"
+license: MIT
+keywords:
+  - TinyML
+  - ESP32
+  - Neonatal Care
+  - Edge AI
+  - Healthcare
