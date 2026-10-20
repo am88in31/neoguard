@@ -83,5 +83,17 @@ NeoGuard takes a **fundamentally different approach**: it detects the **acoustic
 
 **Expected advantage:** 10–25 seconds earlier alarm compared to foot-worn pulse oximetry *(literature-based estimate, pending clinical validation)*. 
 
-### Timeline of a choking event📧 
-### Seyed Mohammad Amin Rahmani from Iran☫  
+### Timeline of a choking event📧 ## 🛡️ Intellectual Property & Protected Assets
+
+**Copyright (c) 2025 Seyed Mohammad Amin Rahmani. All Rights Reserved.**
+
+While the hardware schematics and high-level architecture of NeoGuard are open-source (under the MIT License) to foster academic collaboration, **the core signal processing algorithms, the trained TinyML model weights, and the specific inference logic are proprietary.**
+
+This strategic protection is implemented because:
+1. **Patent Pending:** The unique fusion of I2S audio and IMU data for neonatal choking detection is being prepared for patent filing.
+2. **Commercial Licensing:** Future commercialization of this device (to make it accessible to NICUs and parents) requires a protected IP framework.
+
+**For Scholarship Reviewers & Academic Researchers:**
+If you are a professor or a scholarship committee member evaluating this project, **I am fully prepared to grant you access** to the complete private repository, the full source code, and a live demonstration. This will be provided under a standard Non-Disclosure Agreement (NDA) to ensure mutual trust and academic integrity.
+
+For any licensing inquiries or collaboration requests, please contact: [am88in31@mail.ir] 
