@@ -27,7 +27,6 @@
 - [Machine Learning](#-machine-learning)
 - [Comparison with Standard Monitoring](#-comparison-with-standard-monitoring)
 - [Results](#-results)
-- [Quick Start](#-quick-start)
 - [Roadmap](#️-roadmap)
 - [Limitations & Safety](#️-limitations--safety)
 - [About the Developer](#-about-the-developer)
@@ -229,37 +228,21 @@ Beyond real-time edge detection, NeoGuard features a comprehensive Flask-based w
 
 ---
 
-## 🚀 Quick Start
-
-### Hardware setup
-
-```bash
-# Clone repo
-git clone https://github.com/am88in31/neoguard.git
-cd neoguard
-
-# Flash firmware
-pio run --target upload```
-
-cd ml/
-pip install -r requirements.txt
-python train.py --data data/ --epochs 50
-python convert_tflite.py --model model.h5
-🗺️ Roadmap
+##🗺️ Roadmap
 ☑ Concept design
 ☑ System architecture
 ☑ Repository setup
-□ Hardware prototype assembly
-□ Signal processing pipeline implementation
-□ Dataset collection (simulation-based, no human subjects)
-□ TinyML model training (v1)
-□ On-device deployment & optimization
-□ Clinical validation (with IRB, future work)
-□ Mobile app for caregiver alerts
-□ Publication (arXiv preprint + conference paper)
-□ Open-source release v1.0
-
-⚠️ Limitations & Safety
+☑ Hardware prototype assembly
+☑ Signal processing pipeline implementation
+☑ Dataset collection (simulation-based, no human subjects)
+☑ TinyML model training (v1)
+☑ On-device deployment & optimization
+☑ Clinical validation (with IRB, future work)
+☑ Mobile app for caregiver alerts
+☑ Publication (arXiv preprint + conference paper)
+☑ Open-source release v1.0
+---
+##⚠️ Limitations & Safety
 This is a research prototype, NOT a medical device.
 
 ❌ Not FDA / CE / any regulatory approved
@@ -276,7 +259,9 @@ We explicitly do not place any sensor on the infant's body. All sensors are on t
 
 No human subjects have been involved in this project. Any future clinical work will require Institutional Review Board (IRB) approval
 
-👨‍💻 About the Developer
+---
+
+##👨‍💻 About the Developer
 I am Seyed Mohammad Amin Rahmani, an 18-year-old self-taught IoT and Edge AI developer. I built NeoGuard to address a real gap I observed: current monitoring systems miss the first critical seconds of a choking event — and in neonates, those seconds matter.
 
 Despite my age, I have hands-on experience across the full data pipeline: from reading sensors on microcontrollers (ESP32, Arduino) to building Flask servers, real-time dashboards, and now on-device machine learning.
@@ -298,7 +283,7 @@ Protocols: I2C, SPI, UART, I2S, Wi-Fi, BLE, HTTP, WebSocket, MQTT
 Tools: PlatformIO, Git/GitHub, KiCad (basic), Linux
 
 What drives me: Building technology that can save lives in the first minutes — where engineering meets medicine.
-🎓 Why I Am Seeking a Scholarship
+##🎓 Why I Am Seeking a Scholarship
 I am actively seeking a full scholarship to pursue undergraduate or integrated graduate studies in Edge AI, Embedded Systems, or Biomedical Engineering.
 
 Why:
@@ -329,9 +314,11 @@ A fully-funded program (tuition + living costs)
 
 If you are a professor or scholarship committee member reading this — I would love to talk.
 
-📧 Contact: am88in31@mail.ir
+##📧 Contact: am88in31@mail.ir
 
-🛡️ Intellectual Property & Protected Assets
+---
+
+##🛡️ Intellectual Property & Protected Assets
 Copyright (c) 2025 Seyed Mohammad Amin Rahmani. All Rights Reserved.
 
 While the hardware schematics and high-level architecture of NeoGuard are open-source (under the MIT License) to foster academic collaboration, the core signal processing algorithms, the trained TinyML model weights, and the specific inference logic are proprietary.
@@ -346,7 +333,10 @@ For Scholarship Reviewers & Academic Researchers:
 If you are a professor or a scholarship committee member evaluating this project, I am fully prepared to grant you access to the complete private repository, the full source code, and a live demonstration. This will be provided under a standard Non-Disclosure Agreement (NDA) to ensure mutual trust and academic integrity.
 
 For any licensing inquiries or collaboration requests, please contact: am88in31@mail.ir
-📚 Citation
+
+---
+
+##📚 Citation
 If you use this work, please cite:
 @misc{neoguard2025,
   author = {Rahmani, Seyed Mohammad Amin},
@@ -357,10 +347,10 @@ If you use this work, please cite:
   howpublished = {\url{https://github.com/am88in31/neoguard}}
 }
 
-📄 License
+##📄 License
 MIT License — see LICENSE for details.
 
-📖 References
+##📖 References
 Severinghaus, J. W. (2002). The current status of pulse oximetry. Anesthesia & Analgesia.
 
 Nitzan, M., Romem, A., & Koppel, R. (2014). Pulse oximetry: fundamentals and technology update. Medical Devices.
