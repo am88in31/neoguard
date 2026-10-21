@@ -20,6 +20,7 @@
 - [The Problem](#-the-problem)
 - [The Solution](#-the-solution)
 - [Why Earlier Detection Matters](#️-why-earlier-detection-matters)
+- [System Architecture](#️-system-architecture)
 - [Clinical Dashboard & Analytics](#-clinical-dashboard--analytics)
 - [Hardware](#-hardware)
 - [Signal Processing Pipeline](#-signal-processing-pipeline)
@@ -86,12 +87,49 @@ NeoGuard takes a **fundamentally different approach**: it detects the **acoustic
 ### Timeline of a choking event
 t = 0s ← Choking begins (sucking stops, airway obstructed)
 t = 0-3s ← Movement attempts, stridor sounds, acoustic changes
-t = 3-10s ← Reduced airflow, incrd respiratory effort
+t = 3-10s ← Reduced airflow, increased respiratory effort
 t = 10-20s ← SpO2 begins to drop in peripheral blood
 t = 20-30s ← SpO2 crosses alarm threshold (90%)
 t = 30-60s ← Bradycardia, cyanosis
 t > 60s ← Risk of brain injury, death
+
 **NeoGuard targets t = 0–1s. Pulse oximetry targets t = 15–40s.**
+
+---
+
+## 🏛️ System Architecture(The complete engineering design will be laid out on the map like this)
+┌──────────────┐ ┌──────────────┐
+│ INMP441 │ │ LIS3DH │
+│ I2S Mic │ │ Accelerometer│
+│ (16 kHz) │ │ (200 Hz) │
+└──────┬───────┘ └──────┬───────┘
+│ │
+└─────────┬─────────┘
+▼
+┌───────────────┐
+│ ESP32-S3 │
+│ ┌─────────┐ │
+│ │ MFCC + │ │
+│ │ Feature │ │
+│ │ Extract │ │
+│ └────┬────┘ │
+│ ▼ │
+│ ┌─────────┐ │
+│ │ 1D-CNN │ │
+│ │ TinyML │ │
+│ └────┬────┘ │
+└───────┼───────┘
+▼
+┌───────────────┐
+│ State Machine │
+│ Normal/Suspect│
+│ /Choke/Critical│
+└───────┬───────┘
+▼
+┌───────────────┐
+│ Buzzer + BLE │
+│ Alert │
+└───────────────┘
 
 ---
 
@@ -188,6 +226,25 @@ Beyond real-time edge detection, NeoGuard features a comprehensive Flask-based w
 | **Home usability** | Limited | Designed for home |
 
 **Expected advantage:** 10–25s earlier alarm *(literature-based estimate, pending clinical validation)*.
+
+---
+
+## 🚀 Quick Start
+
+### Hardware setup
+
+```bash
+# Clone repo
+git clone https://github.com/am88in31/neoguard.git
+cd neoguard
+
+# Flash firmware
+pio run --target upload
+
+cd ml/
+pip install -r requirements.txt
+python train.py --data data/ --epochs 50
+python convert_tflite.py --model model.h5
 🗺️ Roadmap
 ☑ Concept design
 ☑ System architecture
@@ -201,26 +258,120 @@ Beyond real-time edge detection, NeoGuard features a comprehensive Flask-based w
 □ Mobile app for caregiver alerts
 □ Publication (arXiv preprint + conference paper)
 □ Open-source release v1.0
----
 
-## 🚀 Quick Start
+⚠️ Limitations & Safety
+This is a research prototype, NOT a medical device.
 
-### Hardware setup
+❌ Not FDA / CE / any regulatory approved
 
-```bash
-# Clone repo
-git clone https://github.com/am88in31/neoguard.git
-cd neoguard
+❌ Not a substitute for caregiver supervision
 
-# Install PlatformIO
-pip install platformio
+❌ Not validated on real neonatal ICU data yet
 
-# Flash firmware
-pio run --target upload
+❌ Thresholds are tuned on simulated data only
 
-# Monitor serial output
-pio device monitor
-cd ml/
-pip install -r requirements.txt
-python train.py --data data/ --epochs 50
-python convert_tflite.py --model model.h5
+⚠️ Always supervise infant feeding — this device is assistive only
+
+We explicitly do not place any sensor on the infant's body. All sensors are on the feeding equipment.
+
+No human subjects have been involved in this project. Any future clinical work will require Institutional Review Board (IRB) approval
+
+👨‍💻 About the Developer
+I am Seyed Mohammad Amin Rahmani, an 18-year-old self-taught IoT and Edge AI developer. I built NeoGuard to address a real gap I observed: current monitoring systems miss the first critical seconds of a choking event — and in neonates, those seconds matter.
+
+Despite my age, I have hands-on experience across the full data pipeline: from reading sensors on microcontrollers (ESP32, Arduino) to building Flask servers, real-time dashboards, and now on-device machine learning.
+
+Technical background:
+
+Languages: Python (advanced), C++ (microcontrollers), HTML/CSS/JS
+
+Edge AI: TensorFlow Lite Micro, TinyML, Edge Impulse
+
+Signal Processing: FFT, MFCC, Butterworth filters, ZCR
+
+Web: Flask, Flask-SocketIO, SQLAlchemy, SQLite, Chart.js
+
+Hardware: ESP32-S3, Arduino, INMP441, LIS3DH, DHT22, LoRa
+
+Protocols: I2C, SPI, UART, I2S, Wi-Fi, BLE, HTTP, WebSocket, MQTT
+
+Tools: PlatformIO, Git/GitHub, KiCad (basic), Linux
+
+What drives me: Building technology that can save lives in the first minutes — where engineering meets medicine.
+🎓 Why I Am Seeking a Scholarship
+I am actively seeking a full scholarship to pursue undergraduate or integrated graduate studies in Edge AI, Embedded Systems, or Biomedical Engineering.
+
+Why:
+
+My family cannot fund international education, but my drive and skills are ready.
+
+I want to work in research labs where I can combine embedded AI with clinical problems.
+
+My long-term goal is to build low-cost medical devices for underserved communities — starting with neonatal care.
+
+What I bring:
+
+A proven, published, open-source project with real-world medical relevance
+
+Hands-on skills in the full pipeline: hardware → firmware → ML → cloud
+
+The discipline to learn independently (I taught myself all of this at 17–18)
+
+A clear research direction: TinyML for healthcare at the edge
+
+What I am looking for:
+
+A research group working on edge AI, embedded ML, or biomedical signal processing
+
+Mentorship from professors who care about real-world impact
+
+A fully-funded program (tuition + living costs)
+
+If you are a professor or scholarship committee member reading this — I would love to talk.
+
+📧 Contact: am88in31@mail.ir
+
+🛡️ Intellectual Property & Protected Assets
+Copyright (c) 2025 Seyed Mohammad Amin Rahmani. All Rights Reserved.
+
+While the hardware schematics and high-level architecture of NeoGuard are open-source (under the MIT License) to foster academic collaboration, the core signal processing algorithms, the trained TinyML model weights, and the specific inference logic are proprietary.
+
+This strategic protection is implemented because:
+
+Patent Pending: The unique fusion of I2S audio and IMU data for neonatal choking detection is being prepared for patent filing.
+
+Commercial Licensing: Future commercialization of this device (to make it accessible to NICUs and parents) requires a protected IP framework.
+
+For Scholarship Reviewers & Academic Researchers:
+If you are a professor or a scholarship committee member evaluating this project, I am fully prepared to grant you access to the complete private repository, the full source code, and a live demonstration. This will be provided under a standard Non-Disclosure Agreement (NDA) to ensure mutual trust and academic integrity.
+
+For any licensing inquiries or collaboration requests, please contact: am88in31@mail.ir
+📚 Citation
+If you use this work, please cite:
+@misc{neoguard2025,
+  author = {Rahmani, Seyed Mohammad Amin},
+  title = {NeoGuard: TinyML-Based Wearable for Early Neonatal Choking Detection},
+  year = {2025},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/am88in31/neoguard}}
+}
+
+📄 License
+MIT License — see LICENSE for details.
+
+📖 References
+Severinghaus, J. W. (2002). The current status of pulse oximetry. Anesthesia & Analgesia.
+
+Nitzan, M., Romem, A., & Koppel, R. (2014). Pulse oximetry: fundamentals and technology update. Medical Devices.
+
+Poets, C. F. (2010). Apparent life-threatening events in infants. Journal of Pediatrics.
+
+Engan, K. et al. (2015). Audio-based infant monitoring. IEEE EMBC.
+
+🙏 Acknowledgments
+Open-source community (TensorFlow, Espressif, PlatformIO)
+
+⭐ If you find this project valuable, please consider starring the repository.
+
+🤝 Collaborations, mentorship, and scholarship opportunities are warmly welcomed.
