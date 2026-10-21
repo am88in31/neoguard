@@ -239,7 +239,7 @@ git clone https://github.com/am88in31/neoguard.git
 cd neoguard
 
 # Flash firmware
-pio run --target upload
+pio run --target upload```
 
 cd ml/
 pip install -r requirements.txt
