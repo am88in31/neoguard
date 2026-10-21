@@ -1,6 +1,5 @@
-# neoguard
-TinyML-based wearable for early detection of neonatal choking during feeding. Fuses I2S audio + IMU on ESP32-S3 with on-device inference (&lt;50ms latency, &lt;100KB model). Aims to detect choking 10–25s earlier than pulse oximetry (literature-based). Research prototype — not a medical device. By an 18-year-old developer.
-# 🍼 NeoGuard           
+# 🍼 NeoGuard
+
 ### TinyML-Based Wearable for Early Neonatal Choking Detection
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -22,6 +21,7 @@ TinyML-based wearable for early detection of neonatal choking during feeding. Fu
 - [The Solution](#-the-solution)
 - [Why Earlier Detection Matters](#️-why-earlier-detection-matters)
 - [System Architecture](#️-system-architecture)
+- [Clinical Dashboard & Analytics](#-clinical-dashboard--analytics)
 - [Hardware](#-hardware)
 - [Signal Processing Pipeline](#-signal-processing-pipeline)
 - [Machine Learning](#-machine-learning)
@@ -32,6 +32,7 @@ TinyML-based wearable for early detection of neonatal choking during feeding. Fu
 - [Limitations & Safety](#️-limitations--safety)
 - [About the Developer](#-about-the-developer)
 - [Why I Am Seeking a Scholarship](#-why-i-am-seeking-a-scholarship)
+- [Intellectual Property & Protected Assets](#️-intellectual-property--protected-assets)
 - [Citation](#-citation)
 - [License](#-license)
 - [References](#-references)
@@ -81,19 +82,134 @@ This delay exists because the sensor measures oxygen saturation in **peripheral 
 
 NeoGuard takes a **fundamentally different approach**: it detects the **acoustic and kinematic signature** of choking at the **airway level** — *before* oxygen desaturation occurs.
 
-**Expected advantage:** 10–25 seconds earlier alarm compared to foot-worn pulse oximetry *(literature-based estimate, pending clinical validation)*. 
+**Expected advantage:** 10–25 seconds earlier alarm compared to foot-worn pulse oximetry *(literature-based estimate, pending clinical validation)*.
 
- ## 🛡️ Intellectual Property & Protected Assets
+### Timeline of a choking event
+t = 0s ← Choking begins (sucking stops, airway obstructed)
+t = 0-3s ← Movement attempts, stridor sounds, acoustic changes
+t = 3-10s ← Reduced airflow, incrd respiratory effort
+t = 10-20s ← SpO2 begins to drop in peripheral blood
+t = 20-30s ← SpO2 crosses alarm threshold (90%)
+t = 30-60s ← Bradycardia, cyanosis
+t > 60s ← Risk of brain injury, death
+**NeoGuard targets t = 0–1s. Pulse oximetry targets t = 15–40s.**
 
-**Copyright (c) 2025 Seyed Mohammad Amin Rahmani. All Rights Reserved.**
+---
 
-While the hardware schematics and high-level architecture of NeoGuard are open-source (under the MIT License) to foster academic collaboration, **the core signal processing algorithms, the trained TinyML model weights, and the specific inference logic are proprietary.**
+## 🏥 Clinical Dashboard & Analytics
 
-This strategic protection is implemented because:
-1. **Patent Pending:** The unique fusion of I2S audio and IMU data for neonatal choking detection is being prepared for patent filing.
-2. **Commercial Licensing:** Future commercialization of this device (to make it accessible to NICUs and parents) requires a protected IP framework.
+Beyond real-time edge detection, NeoGuard features a comprehensive Flask-based web dashboard designed for pediatricians and caregivers. To ensure lightweight operation and clinical explainability, we avoid heavy Large Language Models (LLMs) and instead utilize an on-server **Tabular Machine Learning** model and **Statistical Time-Series Analysis**.
 
-**For Scholarship Reviewers & Academic Researchers:**
-If you are a professor or a scholarship committee member evaluating this project, **I am fully prepared to grant you access** to the complete private repository, the full source code, and a live demonstration. This will be provided under a standard Non-Disclosure Agreement (NDA) to ensure mutual trust and academic integrity.
+### Key Features:
+- **Aggregated Data Storage:** Instead of storing millions of raw data points, the ESP32 sends aggregated statistical summaries (e.g., average sucking duration, frequency of stridor, variance of swallowing rhythm) every few seconds, ensuring optimal database size and privacy.
+- **Automated Clinical Reports:** The server analyzes the monthly data and generates a qualitative/quantitative table. An AI model automatically flags specific checkboxes (e.g., "Feeding Status: Normal", "Stridor Pattern: Mild", "Recommendation: Lighter milk flow").
+- **Multilingual UI:** The web interface dynamically supports **English** and **Chinese** localization, adapting the entire UI and analysis results based on the user's selection.
+- **Printable Standardized PDF:** The dashboard generates a fully English, standardized medical PDF report of the monthly check-up. This PDF is optimized for printing, making it easy for pediatricians to physically attach the report to the infant's medical file.
 
-For any licensing inquiries or collaboration requests, please contact: [am88in31@mail.ir] 
+*Note: The PDF output is strictly standardized in English to ensure international medical compatibility and standard clinical documentation, regardless of the UI language.*
+
+---
+
+## 🔧 Hardware
+
+| Component | Model | Purpose | Cost |
+|-----------|-------|---------|------|
+| MCU | ESP32-S3-WROOM-1-N16R8 | Processing + BLE | $8 |
+| Microphone | INMP441 (I2S) | Acoustic sensing | $3 |
+| Accelerometer | LIS3DH | Motion sensing | $5 |
+| Battery | Li-Po 1000mAh | Portable power | $5 |
+| Charger | TP4056 | Battery management | $1 |
+| **Total** | | | **~$25** |
+
+> ⚠️ **Safety note:** All sensors are mounted on the **feeding equipment** (bottle / breast shield). Nothing is attached to the infant's body.
+
+---
+
+## 📊 Signal Processing Pipeline
+
+### Audio (16 kHz, 1s window, 0.25s hop)
+1. Pre-emphasis + Hamming window
+2. FFT → Mel filterbank (40 bands)
+3. **13 MFCC coefficients** + Δ + ΔΔ
+4. Spectral features: centroid, rolloff, ZCR, entropy
+5. **Band energy 500–1500 Hz** (stridor-specific)
+
+### IMU (200 Hz, 1s window)
+1. Butterworth bandpass (0.5–5 Hz)
+2. RMS, variance, jerk
+3. FFT peak frequency (sucking rhythm)
+4. Cross-correlation with reference swallow template
+
+### Fusion
+- Concatenate audio (39-dim) + IMU (12-dim) = **51-dim feature vector**
+- Fed into a **1D-CNN** (3 conv layers + 2 dense)
+- Softmax → 4 classes: `normal`, `stridor`, `choke_attempt`, `critical`
+
+---
+
+## 🧠 Machine Learning
+
+- **Framework:** TensorFlow Lite Micro
+- **Model size:** ~87 KB (fits in ESP32-S3 SRAM)
+- **Inference latency:** ~42 ms @ 240 MHz
+- **Architecture:** 1D-CNN (3 conv + 2 dense layers)
+- **Classes:** 4 (normal, stridor, choke_attempt, critical)
+- **Training data:** *to be collected / simulated* (see Roadmap)
+- **Target accuracy:** ≥ 90% on held-out test set
+
+---
+
+## 📈 Results
+
+| Metric | Current | Target |
+|--------|---------|--------|
+| Accuracy | *pending* | ≥ 90% |
+| Precision (choke class) | *pending* | ≥ 85% |
+| Recall (choke class) | *pending* | ≥ 95% |
+| False positive rate | *pending* | ≤ 5% |
+| Inference latency | ~42 ms | < 100 ms |
+| Model size | ~87 KB | < 200 KB |
+| Power consumption | *pending* | < 100 mA @ 3.3V |
+
+*See [docs/results.md](docs/results.md) for full analysis (to be published).*
+
+---
+
+## 📊 Comparison with Standard Monitoring
+
+| Feature | Foot Pulse Oximeter | NeoGuard (This Project) |
+|---|---|---|
+| **Sensing site** | Peripheral blood (foot) | Airway (audio + motion) |
+| **Physiological delay** | 10–30s (circulatory) | ~0.5s |
+| **Alarm timing** | 15–40s after event | ~1s after event |
+| **Silent choke detection** | ❌ Only after SpO2 drop | ✅ From acoustic pattern |
+| **Cost** | $300–$500 | <$30 |
+| **Skin contact** | ✅ (adhesive on foot) | ❌ (on bottle) |
+| **Power** | Medium | Low |
+| **Home usability** | Limited | Designed for home |
+
+**Expected advantage:** 10–25s earlier alarm *(literature-based estimate, pending clinical validation)*.
+
+---
+
+## 🚀 Quick Start
+
+### Hardware setup
+
+```bash
+# Clone repo
+git clone https://github.com/am88in31/neoguard.git
+cd neoguard
+
+# Install PlatformIO
+pip install platformio
+
+# Flash firmware
+pio run --target upload
+
+# Monitor serial output
+pio device monitor
+cd ml/
+pip install -r requirements.txt
+python train.py --data data/ --epochs 50
+python convert_tflite.py --model model.h5
