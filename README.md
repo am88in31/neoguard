@@ -188,7 +188,19 @@ Beyond real-time edge detection, NeoGuard features a comprehensive Flask-based w
 | **Home usability** | Limited | Designed for home |
 
 **Expected advantage:** 10–25s earlier alarm *(literature-based estimate, pending clinical validation)*.
-
+🗺️ Roadmap
+☑ Concept design
+☑ System architecture
+☑ Repository setup
+□ Hardware prototype assembly
+□ Signal processing pipeline implementation
+□ Dataset collection (simulation-based, no human subjects)
+□ TinyML model training (v1)
+□ On-device deployment & optimization
+□ Clinical validation (with IRB, future work)
+□ Mobile app for caregiver alerts
+□ Publication (arXiv preprint + conference paper)
+□ Open-source release v1.0
 ---
 
 ## 🚀 Quick Start
