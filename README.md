@@ -15,7 +15,7 @@
 
 ---
 
-## 📖 Table of Contents
+## 📖 Table of important Contents
 
 - [The Problem](#-the-problem)
 - [The Solution](#-the-solution)
@@ -26,16 +26,6 @@
 - [Signal Processing Pipeline](#-signal-processing-pipeline)
 - [Machine Learning](#-machine-learning)
 - [Comparison with Standard Monitoring](#-comparison-with-standard-monitoring)
-- [Roadmap](#️-roadmap)
-- [Limitations & Safety](#️-limitations--safety)
-- [About the Developer](#-about-the-developer)
-- [Why I Am Seeking a Scholarship](#-why-i-am-seeking-a-scholarship)
-- [Contact](#-contact)
-- [Intellectual Property & Protected Assets](#️-intellectual-property--protected-assets)
-- [Citation](#-citation)
-- [License](#-license)
-- [References](#-references)
-- [Acknowledgments](#-acknowledgments)
 
 ---
 
