@@ -20,7 +20,6 @@
 - [The Problem](#-the-problem)
 - [The Solution](#-the-solution)
 - [Why Earlier Detection Matters](#️-why-earlier-detection-matters)
-- [System Architecture](#️-system-architecture)
 - [Clinical Dashboard & Analytics](#-clinical-dashboard--analytics)
 - [Hardware](#-hardware)
 - [Signal Processing Pipeline](#-signal-processing-pipeline)
